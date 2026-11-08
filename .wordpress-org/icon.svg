@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+	<title>Codo Security.txt</title>
+	<rect width="256" height="256" rx="56" fill="#025373"/>
+	<!-- Document with folded corner -->
+	<path d="M70 38 H146 L192 84 V204 a10 10 0 0 1 -10 10 H70 a10 10 0 0 1 -10 -10 V48 a10 10 0 0 1 10 -10 Z" fill="#ffffff"/>
+	<path d="M146 38 V74 a10 10 0 0 0 10 10 H192 Z" fill="#9fbfca"/>
+	<!-- File lines -->
+	<g stroke="#025373" stroke-width="11" stroke-linecap="round">
+		<line x1="88" y1="108" x2="140" y2="108"/>
+		<line x1="88" y1="136" x2="124" y2="136"/>
+		<line x1="88" y1="164" x2="108" y2="164"/>
+	</g>
+	<!-- Lock badge -->
+	<circle cx="190" cy="182" r="42" fill="#F29472" stroke="#025373" stroke-width="10"/>
+	<path d="M177 180 v-8 a13 13 0 0 1 26 0 v8" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+	<rect x="172" y="180" width="36" height="28" rx="6" fill="#ffffff"/>
+	<circle cx="190" cy="193" r="4.5" fill="#025373"/>
+</svg>
