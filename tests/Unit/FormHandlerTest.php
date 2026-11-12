@@ -151,6 +151,27 @@ final class FormHandlerTest extends TestCase {
 		$this->assertSame( 1, $handler->finished );
 	}
 
+	public function test_the_stored_draft_is_sanitised_and_limited_to_known_fields() {
+		$this->store();
+		$_POST['codo_security_txt'] = array(
+			'enabled'  => '1',
+			'contacts' => "nonsense<script>alert(1)</script>\nmore",
+			'expires'  => '2027-06-01',
+			'evil'     => '<b>x</b>',
+			'policy'   => array( 'not', 'a', 'string' ),
+		);
+		$handler = $this->handler();
+
+		$handler->handle_save();
+
+		$draft = $this->notices->take_draft();
+		$this->assertSame( "nonsensealert(1)\nmore", $draft['contacts'] );
+		$this->assertArrayNotHasKey( 'evil', $draft );
+		$this->assertSame( '', $draft['policy'] );
+		$this->assertSame( '1', $draft['enabled'] );
+		$this->assertSame( '', $draft['reminders'] );
+	}
+
 	public function test_a_missing_post_array_is_treated_as_empty() {
 		$handler = $this->handler();
 

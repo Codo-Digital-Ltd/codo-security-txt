@@ -56,6 +56,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 				'sanitize_text_field'   => static function ( $text ) {
 					return trim( strip_tags( (string) $text ) );
 				},
+				'sanitize_textarea_field' => static function ( $text ) {
+					return is_scalar( $text ) ? trim( strip_tags( (string) $text ) ) : '';
+				},
 				'wp_unslash'            => static function ( $value ) {
 					return $value;
 				},

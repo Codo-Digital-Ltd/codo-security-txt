@@ -26,6 +26,9 @@ class FormHandler {
 	const EXTEND = 'codo_security_txt_extend';
 	const VERIFY = 'codo_security_txt_verify';
 
+	const TEXT_FIELDS = array( 'contacts', 'encryption', 'canonical', 'expires', 'acknowledgments', 'preferred_languages', 'policy', 'hiring', 'csaf', 'signed' );
+	const FLAG_FIELDS = array( 'enabled', 'legacy_path', 'reminders', 'auto_canonical' );
+
 	/**
 	 * Settings.
 	 *
@@ -117,8 +120,7 @@ class FormHandler {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce checked in authorised(); every value is validated and sanitised by Validator::validate().
-		$input  = isset( $_POST['codo_security_txt'] ) && is_array( $_POST['codo_security_txt'] ) ? wp_unslash( $_POST['codo_security_txt'] ) : array();
+		$input  = $this->submitted_input();
 		$result = $this->validator->validate( $input, time() );
 
 		if ( ! empty( $result['errors'] ) ) {
@@ -141,6 +143,29 @@ class FormHandler {
 			}
 		}
 		$this->finish();
+	}
+
+	/**
+	 * Read the submitted settings and sanitise them straight away.
+	 *
+	 * Only the known keys are kept. Text areas go through
+	 * sanitize_textarea_field() (line breaks survive); checkboxes become
+	 * '1' or ''. The nonce is checked in authorised() before this runs.
+	 *
+	 * @return array<string, string>
+	 */
+	private function submitted_input() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce checked in authorised().
+		$raw = isset( $_POST['codo_security_txt'] ) && is_array( $_POST['codo_security_txt'] ) ? array_map( 'sanitize_textarea_field', wp_unslash( $_POST['codo_security_txt'] ) ) : array();
+
+		$input = array();
+		foreach ( self::TEXT_FIELDS as $key ) {
+			$input[ $key ] = isset( $raw[ $key ] ) ? $raw[ $key ] : '';
+		}
+		foreach ( self::FLAG_FIELDS as $key ) {
+			$input[ $key ] = ! empty( $raw[ $key ] ) ? '1' : '';
+		}
+		return $input;
 	}
 
 	/**
